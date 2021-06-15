@@ -647,16 +647,7 @@ class UUIDField(LogicalTypeField):
 class RecordField(BaseField):
     def get_avro_type(self) -> typing.Union[typing.List, typing.Dict]:
         record_type = self.type.avro_schema_to_python()
-
-        # when there is a nested record replace its name
-        # to avoid name colisions
-        record_name = self.type.__name__.lower()
-        if record_name not in self.name:
-            name = f"{self.name}_{record_name}_record"
-        else:
-            name = f"{self.name}_record"
-
-        record_type["name"] = name
+        record_type["name"] = f"{self.type.__name__}"
 
         if self.default is None:
             return [NULL, record_type]
